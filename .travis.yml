@@ -9,10 +9,9 @@ before_install:
   - export DISPLAY=:99.0
   - sh -e /etc/init.d/xvfb start
   - sudo apt remove docker
-  - curl -fsSL https://get.docker.com/ | sh
+  - curl -fsSL https://get.docker.com/ | sh > /dev/null
 install:
-  - npm install
-  - npm update
+  - npm install --silent
 script:
   - npm run gulp all-non-e2e
   - npm run gulp lint
@@ -22,10 +21,10 @@ after_success:
   - export REPO=desarrolloleutwylerdubor/scraaaam
   - export TAG=`if [ "$TRAVIS_BRANCH" == "master" ]; then echo "latest"; else echo $TRAVIS_BRANCH ; fi`
   - export IMAGE_NAME=$REPO:$TRAVIS_COMMIT
-  - export EXTRA_TAGS = ($REPO:$TAG $REPO:travis-$TRAVIS_BUILD_NUMBER)
   - docker build -f Dockerfile -t $IMAGE_NAME .
-#  - docker tag $IMAGE_NAME $REPO:$TAG
-#  - docker tag $IMAGE_NAME $REPO:travis-$TRAVIS_BUILD_NUMBER
+  - docker tag $IMAGE_NAME $REPO:$TAG
+  - docker tag $IMAGE_NAME $REPO:travis-$TRAVIS_BUILD_NUMBER
   - docker push $IMAGE_NAME
-  - for extra_tag in ${EXTRA_TAGS} do docker tag $IMAGE_NAME $extra_tag && docker push $extra_tag done
+  - docker push $REPO:$TAG
+  - docker push $REPO:travis-$TRAVIS_BUILD_NUMBER
 
