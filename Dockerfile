@@ -1,4 +1,5 @@
 # Requires docker >= 17.05
+# See https://github.com/moby/moby/releases/tag/v17.05.0-ce for installation intructions
 
 FROM node:6 AS builder
 
