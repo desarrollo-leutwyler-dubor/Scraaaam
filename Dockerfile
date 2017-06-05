@@ -11,11 +11,11 @@ COPY package.json .
 
 RUN npm set progress=false && npm config set depth 0
 
-RUN npm install --only=production
+RUN npm install --only=production --silent
 
 RUN cp -R node_modules prod_node_modules
 
-RUN npm install
+RUN npm install --silent
 
 COPY . .
 
