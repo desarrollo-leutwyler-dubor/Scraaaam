@@ -1,5 +1,7 @@
 language: node_js
-sudo: false
+sudo: required
+services:
+  - docker
 node_js:
   - "6.10"
 before_install:
@@ -12,4 +14,13 @@ install:
 script:
   - npm run gulp all-non-e2e
   - npm run gulp lint
-after_success: npm run gulp coverage
+after_success:
+  - npm run gulp coverage
+  - docker -v
+#  - docker login -e $DOCKER_EMAIL -u $DOCKER_USER -p $DOCKER_PASS
+#  - export REPO=desarrolloleutwylerdubor/scraaaam
+#  - export TAG=`if [ "$TRAVIS_BRANCH" == "master" ]; then echo "latest"; else echo $TRAVIS_BRANCH ; fi`
+#  - docker build -f Dockerfile -t $REPO:$COMMIT .
+#  - docker tag $REPO:$COMMIT $REPO:$TAG
+#  - docker tag $REPO:$COMMIT $REPO:travis-$TRAVIS_BUILD_NUMBER
+#  - docker push $REPO
