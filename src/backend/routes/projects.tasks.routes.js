@@ -1,49 +1,59 @@
 import express from 'express'
 import Task from '../models/Task.js'
 import BaseTask from '../models/BaseTask.js'
-import {paramById} from './utils'
-import ProjectService from '../services/project.service'
+import {paramById, extendTask} from './utils'
 import tasksCommentsRouter from './projects.tasks.comments.routes.js'
 
 let router = express.Router({mergeParams: true})
 
 paramById(router, BaseTask, 'aTask')
 
-router.get('/all', (req, res, next) => {
-  //returns every task bounded to the project
-  Task.find({project: req.aProject._id})
-      .then(tasks => res.json(tasks))
-      .catch(next)
-})
+router.get('/all', (req, res, next) =>
+    Task.find({project: req.aProject._id})
+        .then(tasks => res.json(tasks))
+        .catch(next)
+)
 
-router.get('/', (req, res, next) => {
-  //returns only the lvl 1 tasks
-  res.json(req.aProject.tasks)
-})
+router.get('/', (req, res, next) =>
+    res.json(req.aProject.tasks)
+)
 
-router.post('/', (req, res, next) => {
-  //if the parentTask is undefined means that the task is a direct offspring of the project
-  ProjectService.addSubtask(req.aProject, req.aProject, new Task(req.body))
-      .then(updated => res.status(201).json(updated.task))
-      .catch(next)
-})
-
-router.post('/:aTask', (req, res, next) => {
-    ProjectService.addSubtask(req.aProject, req.aTask, new Task(req.body))
+router.post('/', (req, res, next) =>
+    BaseTask.addSubtask(req.aProject, req.aProject, Task.fullCreate(req.project, req.body))
         .then(updated => res.status(201).json(updated.task))
         .catch(next)
-})
+)
 
-router.get('/:aTask', (req, res, next) => {
-    req.aTask.populate('tasks project parent contributors comments').execPopulate()
-        .then(task => res.json(task))
+router.post('/:aTask', (req, res, next) =>
+    BaseTask.addSubtask(req.aProject, req.aTask, Task.fullCreate(req.project, req.body))
+        .then(updated => res.status(201).json(updated.task))
         .catch(next)
-})
+)
 
-router.delete('/:aTask', (req, res) => {
-  req.aTask.remove()
-  res.sendStatus(202)
-})
+router.get('/:aTask', (req, res, next) =>
+    extendTask(req.aTask)
+        .then(task => {
+            res.json(task)
+        })
+        .catch(next)
+)
+
+router.get('/:aTask/history', (req, res, next) => {
+        req.aTask.history
+            .then(list =>
+                Promise.all(list.map(task => extendTask(task)))
+                    .then(tasks => res.json(tasks))
+                    .catch(next)
+            )
+            .catch(next)
+    }
+)
+
+router.delete('/:aTask', (req, res, next) =>
+    req.aTask.delete()
+        .then(parent => extendTask(parent).then(extended => res.json(extended)))
+        .catch(next)
+)
 
 router.put('/:aTask', (req, res, next) => {
     BaseTask.findByIdAndUpdate(req.aTask._id, req.body)

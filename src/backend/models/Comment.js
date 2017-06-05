@@ -1,5 +1,5 @@
 import mongoose from 'mongoose'
-import Project from './Task'
+import Task from './Task'
 
 const commentSchema = new mongoose.Schema({
     content: String,
@@ -9,12 +9,21 @@ const commentSchema = new mongoose.Schema({
 })
 
 commentSchema.pre('remove', function (next) {
-    Task.updateMany({_id: {$in: this.task}}, {$pullAll: {comments: [this._id]}})
+    Task.findByIdAndUpdate(this.task, {$pullAll: {comments: [this._id]}})
         .then(next)
 })
 
 commentSchema.methods.delete = function () {
-    this.remove()
+    return this.remove()
+}
+
+commentSchema.statics.fullCreate = function (task, data) {
+    let aComment
+    return this.create(data).then(someComment => {
+        aComment = someComment
+        task.comments.push(someComment)
+        task.save()
+    }).then(someTask => aComment)
 }
 
 const Comment = mongoose.model('Comment', commentSchema)

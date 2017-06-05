@@ -15,8 +15,31 @@ taskSchema.pre('remove', function (next) {
 })
 
 taskSchema.methods.delete = function () {
-    BaseTask.findByIdAndUpdate(this.parent, {$pullAll: {tasks: [this._id]}})
-        .then(_ => this.remove())
+    return BaseTask.findByIdAndUpdate(this.parent, {$pullAll: {tasks: [this._id]}}, {new: true})
+        .then(parent => {
+            this.remove()
+            return Promise.resolve(parent)
+        })
+}
+
+taskSchema.methods.buildHistory = function (promiseOfList) {
+    return promiseOfList.then(list => {
+        list.push(this)
+        return BaseTask.findById(this.parent).then(parent => parent.buildHistory(Promise.resolve(list)))
+    })
+}
+
+taskSchema.virtual('allowedCategories').get(function () {
+    const drop = this.project.categories.findIndex(list => list.includes(this.category))
+    const allowed = this.project.categories.slice(drop)
+    return [].concat.apply([], allowed)
+})
+
+taskSchema.statics.fullCreate = function (project, data) {
+    const tasks = data.tasks || []
+    data.tasks = []
+    return this.create(data)
+        .then(saved => this.addSubtasks(project, saved, tasks))
 }
 
 const Task = BaseTask.discriminator('Task', taskSchema)

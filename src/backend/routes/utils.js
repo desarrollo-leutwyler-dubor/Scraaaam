@@ -11,3 +11,13 @@ export const paramById = (router, clazz, property) => {
             .catch(next)
     })
 }
+
+export const extendTask = task => {
+    return task.populate('tasks project parent contributors comments').execPopulate()
+        .then(populated => {
+            const extended = populated.toObject()
+            extended.allowedCategories = populated.allowedCategories
+            extended.categoryDetail = populated.categoryDetail
+            return extended
+        })
+}
