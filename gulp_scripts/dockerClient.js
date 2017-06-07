@@ -15,8 +15,9 @@ class DockerClient {
                 src: this.srcFiles
             }, {t: 'sarasa'})
                 .then(output => {
-                    output.pipe(process.stdout)
-                    return output
+                    output.setEncoding('UTF-8')
+                    output.on('data', data => console.log(JSON.parse(data).stream.slice(0, -1)))
+                    return new Promise(resolve => output.on('end', resolve))
                 })
         }
 
@@ -31,8 +32,6 @@ class DockerClient {
         const folders = []
         const files = ['Dockerfile']
         dockerInclude.forEach(entry => entry.startsWith('/') ? folders.push(entry) : files.push(entry))
-        console.log(folders)
-        console.log(files)
         return files
     }
 }
