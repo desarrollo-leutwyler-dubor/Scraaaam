@@ -48,6 +48,7 @@
     "gulp": "^3.9.1",
     "gulp-babel": "^6.1.2",
     "gulp-codecov": "^3.0.1",
+    "gulp-docker": "0.0.12",
     "gulp-eslint": "^3.0.1",
     "gulp-live-server": "0.0.30",
     "gulp-mocha": "4.3.1",
