@@ -6,7 +6,9 @@ import {hotServer, transpile} from './gulp_scripts/server'
 import {backend_tests} from './gulp_scripts/backendTests'
 import {frontend_components_tests} from './gulp_scripts/components'
 import {initProtractor} from './gulp_scripts/protractor'
-import {webpack} from "./gulp_scripts/webpack"
+import {webpack} from './gulp_scripts/webpack'
+import DockerClient from './gulp_scripts/dockerClient'
+import environment from './gulp_scripts/environment'
 import run from 'gulp-run'
 
 const dirs = {
@@ -36,3 +38,7 @@ gulp.task('frontend-all', ['frontend-components-test', 'frontend-e2e-test']);
 gulp.task('all-non-e2e', ['frontend-components-test', 'backend-test']);
 
 gulp.task('coverage', () => run('npm run coverage').exec());
+
+const dockerClient = new DockerClient(__dirname, environment.dockerOpts)
+
+gulp.task('docker-build', dockerClient.buildImage());

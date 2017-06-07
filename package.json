@@ -41,6 +41,7 @@
     "codecov": "^2.2.0",
     "copy-webpack-plugin": "^4.0.1",
     "css-loader": "^0.27.3",
+    "dockerode": "^2.4.3",
     "es6-promisify": "^5.0.0",
     "es6-shim": "^0.35.3",
     "eslint": "^3.19.0",
