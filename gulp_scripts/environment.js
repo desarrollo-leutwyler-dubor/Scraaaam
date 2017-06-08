@@ -4,10 +4,29 @@ import childProcess from 'child_process'
 const exec = promisify(childProcess.exec)
 
 class DefaultEnvironment {
+    constructor(baseTag) {
+        this.baseTag = baseTag
+    }
+
+    makeTag(tag) {
+        return `${this.baseTag}:${tag.replace('\n', '')}`
+    }
+
+    get commitTag() {
+        return exec('git rev-parse --short HEAD')
+            .then(commitHash => this.makeTag(`commit-${commitHash}`))
+            .catch(err => {
+                // Swallow errors because, for some reason, the commands runs twice and fails the second time
+            })
+    }
+
+    get branchTag() {
+        return exec('git symbolic-ref --short HEAD')
+            .then(branch => this.makeTag(`branch-${branch}`))
+    }
+
     dockerTags() {
-        const currentBrach = exec('git symbolic-ref --short HEAD')
-        const currentCommit = exec('git rev-parse --short HEAD')
-        return Promise.all([currentBrach, currentCommit])
+        return Promise.all(this.branchTag, this.commitTag)
     }
 }
 
@@ -15,15 +34,15 @@ class TravisEnvironment extends DefaultEnvironment {
     dockerTags() {
         return super.dockerTags()
             .then(tags => {
-                tags.push(`travis-build-${process.env.TRAVIS_BUILD_NUMBER}`)
+                tags.push(this.makeTag(`travis-build-${process.env.TRAVIS_BUILD_NUMBER}`))
                 return tags
             })
     }
 }
 
-let environment = new DefaultEnvironment()
+let environment = DefaultEnvironment
 if (process.env.TRAVIS) {
-    environment = new TravisEnvironment()
+    environment = TravisEnvironment
 }
 
 export default environment
