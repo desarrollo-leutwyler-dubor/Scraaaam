@@ -41,6 +41,8 @@
     "codecov": "^2.2.0",
     "copy-webpack-plugin": "^4.0.1",
     "css-loader": "^0.27.3",
+    "dockerode": "^2.4.3",
+    "es6-promisify": "^5.0.0",
     "es6-shim": "^0.35.3",
     "eslint": "^3.19.0",
     "eslint-config-google": "^0.7.1",
@@ -72,6 +74,7 @@
     "sinon": "2.2.0",
     "sinon-chai": "^2.10.0",
     "supertest": "^3.0.0",
+    "tar-fs": "^1.15.3",
     "webpack": "2.3.3"
   },
   "dependencies": {
@@ -95,5 +98,5 @@
     "rxjs": "5.0.1",
     "zone.js": "0.8.10"
   },
-  "homepage": "https://github.com/Ramshell/Scraaaam#readme"
+  "homepage": "https://github.com/desarrollo-leutwyler-dubor/Scraaaam#readme"
 }

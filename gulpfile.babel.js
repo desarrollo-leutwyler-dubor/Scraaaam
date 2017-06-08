@@ -1,14 +1,15 @@
 'use strict';
 
-import gulp from 'gulp';
+import gulp from 'gulp'
 import {lintTask} from './gulp_scripts/lintTask'
-import {hotServer, server, transpile} from './gulp_scripts/server'
+import {hotServer, transpile} from './gulp_scripts/server'
 import {backend_tests} from './gulp_scripts/backendTests'
 import {frontend_components_tests} from './gulp_scripts/components'
 import {initProtractor} from './gulp_scripts/protractor'
-import {webpack} from "./gulp_scripts/webpack";
+import {webpack} from './gulp_scripts/webpack'
+import GulpDockerClient from './gulp_scripts/gulpDockerClient'
+import DockerUtils from './gulp_scripts/dockerUtils'
 import run from 'gulp-run'
-
 
 const dirs = {
     src: 'src',
@@ -22,11 +23,9 @@ gulp.task('transpile', transpile(dirs.src, dirs.dist));
 
 gulp.task('webpack', webpack(dirs.src, dirs.dist));
 
-gulp.task('build', ['transpile', 'webpack'])
+gulp.task('build', ['transpile', 'webpack']);
 
 gulp.task('hot-server', ['build'], hotServer(dirs.src, dirs.dist));
-
-gulp.task('server', server(dirs.dist));
 
 gulp.task('backend-test', backend_tests(dirs.test));
 
@@ -38,5 +37,12 @@ gulp.task('frontend-all', ['frontend-components-test', 'frontend-e2e-test']);
 
 gulp.task('all-non-e2e', ['frontend-components-test', 'backend-test']);
 
-gulp.task('coverage', () =>
-    run('npm run coverage').exec());
+gulp.task('coverage', () => run('npm run coverage').exec());
+
+const dockerUtils = new DockerUtils('desarrolloleutwylerdubor', 'scraaaam')
+
+const dockerClient = new GulpDockerClient(dockerUtils.dockerOpts)
+
+gulp.task('docker-build', dockerClient.buildImage(__dirname, dockerUtils.commitTag));
+
+gulp.task('docker-push', ['docker-build'], dockerClient.pushWith(dockerUtils))
