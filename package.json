@@ -74,6 +74,7 @@
     "sinon": "2.2.0",
     "sinon-chai": "^2.10.0",
     "supertest": "^3.0.0",
+    "tar-fs": "^1.15.3",
     "webpack": "2.3.3"
   },
   "dependencies": {

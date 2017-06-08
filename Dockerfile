@@ -5,11 +5,11 @@ FROM node:6 AS builder
 
 WORKDIR scraaaam
 
-RUN npm install --global gulp-cli
+RUN npm set progress=false && npm config set depth 0
+
+RUN npm install --global --silent gulp-cli > /dev/null
 
 COPY package.json .
-
-RUN npm set progress=false && npm config set depth 0
 
 RUN npm install --only=production --silent > /dev/null
 
