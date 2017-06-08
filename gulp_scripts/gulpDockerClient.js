@@ -34,9 +34,7 @@ class GulpDockerClient extends Docker {
 
     pushWith(utils) {
         return () => Promise.all([utils.commitTag, utils.dockerTags, utils.login])
-            .then(([imageName, tags, _]) => {
-                return Promise.all(tags.map(tag => utils.tagAndPush(imageName, tag)))
-            })
+            .then(([imageName, tags, _]) => Promise.all(tags.map(tag => utils.tagAndPush(imageName, tag))))
     }
 }
 
