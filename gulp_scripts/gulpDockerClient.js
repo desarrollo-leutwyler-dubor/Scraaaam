@@ -31,7 +31,13 @@ class GulpDockerClient extends Docker {
         })
         return tarFile.pipe(zlib.createGzip())
     }
+
+    pushWith(utils) {
+        return () => Promise.all([utils.commitTag, utils.dockerTags, utils.login])
+            .then(([imageName, tags, _]) => {
+                return Promise.all(tags.map(tag => utils.tagAndPush(imageName, tag)))
+            })
+    }
 }
 
 export default GulpDockerClient
-

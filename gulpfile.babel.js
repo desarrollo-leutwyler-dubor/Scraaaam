@@ -39,8 +39,10 @@ gulp.task('all-non-e2e', ['frontend-components-test', 'backend-test']);
 
 gulp.task('coverage', () => run('npm run coverage').exec());
 
-const dockerUtils = new DockerUtils('scraaaam', 'desarrolloleutwylerdubor/scraaaam')
+const dockerUtils = new DockerUtils('desarrolloleutwylerdubor', 'scraaaam')
 
 const dockerClient = new GulpDockerClient(dockerUtils.dockerOpts)
 
 gulp.task('docker-build', dockerClient.buildImage(__dirname, dockerUtils.commitTag));
+
+gulp.task('docker-push', ['docker-build'], dockerClient.pushWith(dockerUtils))

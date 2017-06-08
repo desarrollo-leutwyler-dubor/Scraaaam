@@ -17,14 +17,5 @@ script:
   - npm run gulp lint
 after_success:
   - npm run gulp coverage
-  - docker login -e $DOCKER_EMAIL -u $DOCKER_USER -p $DOCKER_PASS
-  - export REPO=desarrolloleutwylerdubor/scraaaam
-  - export TAG=`if [ "$TRAVIS_BRANCH" == "master" ]; then echo "latest"; else echo $TRAVIS_BRANCH ; fi`
-  - export IMAGE_NAME=$REPO:$TRAVIS_COMMIT
-  - docker build -f Dockerfile -t $IMAGE_NAME .
-  - docker tag $IMAGE_NAME $REPO:$TAG
-  - docker tag $IMAGE_NAME $REPO:travis-$TRAVIS_BUILD_NUMBER
-  - docker push $IMAGE_NAME
-  - docker push $REPO:$TAG
-  - docker push $REPO:travis-$TRAVIS_BUILD_NUMBER
+  - npm run gulp docker-push
 
