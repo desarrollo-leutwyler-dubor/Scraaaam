@@ -48,7 +48,7 @@ class DefaultUtils {
 
 class TravisUtils extends DefaultUtils {
     get dockerTags() {
-        return super.dockerTags()
+        return super.dockerTags
             .then(tags => {
                 tags.push(this.makeTag(`travis-build-${process.env.TRAVIS_BUILD_NUMBER}`))
                 return tags
