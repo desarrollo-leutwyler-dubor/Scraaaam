@@ -14,7 +14,11 @@ class GulpDockerClient extends Docker {
             .then(tag => super.buildImage(this.srcFiles(context), {t: tag}))
             .then(output => {
                 output.setEncoding('UTF-8')
-                output.on('data', data => console.log(JSON.parse(data).stream.slice(0, -1)))
+                if (process.env.TRAVIS) {
+                    output.pipe(process.stdout)
+                } else {
+                    output.on('data', data => console.log(JSON.parse(data).stream.slice(0, -1)))
+                }
                 return new Promise(resolve => output.on('end', resolve))
             })
     }
