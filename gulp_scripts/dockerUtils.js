@@ -3,7 +3,7 @@ import childProcess from 'child_process'
 
 const exec = promisify(childProcess.exec)
 
-class DefaultEnvironment {
+class DefaultUtils {
     constructor(baseTag) {
         this.baseTag = baseTag
     }
@@ -30,7 +30,7 @@ class DefaultEnvironment {
     }
 }
 
-class TravisEnvironment extends DefaultEnvironment {
+class TravisUtils extends DefaultUtils {
     dockerTags() {
         return super.dockerTags()
             .then(tags => {
@@ -40,9 +40,9 @@ class TravisEnvironment extends DefaultEnvironment {
     }
 }
 
-let environment = DefaultEnvironment
+let environment = DefaultUtils
 if (process.env.TRAVIS) {
-    environment = TravisEnvironment
+    environment = TravisUtils
 }
 
 export default environment

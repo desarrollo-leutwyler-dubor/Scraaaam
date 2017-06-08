@@ -8,7 +8,7 @@ import {frontend_components_tests} from './gulp_scripts/components'
 import {initProtractor} from './gulp_scripts/protractor'
 import {webpack} from './gulp_scripts/webpack'
 import GulpDockerClient from './gulp_scripts/gulpDockerClient'
-import Environment from './gulp_scripts/environment'
+import DockerUtils from './gulp_scripts/dockerUtils'
 import run from 'gulp-run'
 
 const dirs = {
@@ -39,8 +39,8 @@ gulp.task('all-non-e2e', ['frontend-components-test', 'backend-test']);
 
 gulp.task('coverage', () => run('npm run coverage').exec());
 
-const environment = new Environment('desarrolloleutwylerdubor/scraaaam')
+const dockerUtils = new DockerUtils('scraaaam', 'desarrolloleutwylerdubor/scraaaam')
 
-const dockerClient = new GulpDockerClient(environment.dockerOpts)
+const dockerClient = new GulpDockerClient(dockerUtils.dockerOpts)
 
-gulp.task('docker-build', dockerClient.buildImage(__dirname, environment.commitTag));
+gulp.task('docker-build', dockerClient.buildImage(__dirname, dockerUtils.commitTag));
