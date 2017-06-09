@@ -76,7 +76,7 @@ class TravisUtils extends DefaultUtils {
     get branchTag() {
         const isPR = process.env.TRAVIS_PULL_REQUEST
         return Promise.resolve(this.makeTag(
-            `branch-${isPR === 'false' ? process.env.TRAVIS_PULL_REQUEST_BRANCH : process.env.TRAVIS_BRANCH}`
+            `branch-${isPR === 'false' ? process.env.TRAVIS_BRANCH : process.env.TRAVIS_PULL_REQUEST_BRANCH}`
         ))
     }
 }
