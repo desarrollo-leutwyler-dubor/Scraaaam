@@ -12,20 +12,38 @@ class DefaultUtils {
         return `${this.repo}:${tag.replace('\n', '').replace('/', '-')}`
     }
 
+    cacheCommand(property, command, defaultValue, retries) {
+        if (retries === undefined) {
+            retries = 2
+        }
+        if (!this[`_${property}`]) {
+            return this.exec(command)
+                .then(returnValue => {
+                    this[`_${property}`] = returnValue
+                    return returnValue
+                })
+                .catch(err => {
+                    console.log(err.message)
+                    if (retries === 0) {
+                        this[`_${property}`] = defaultValue
+                        return defaultValue
+                    }
+                    // Retry on error because, for some reason, the command sometimes fails randomly
+                    return this.cacheCommand(property, command, defaultValue, retries - 1)
+                })
+        } else {
+            return Promise.resolve(this[`_${property}`])
+        }
+    }
+
     get commitTag() {
-        return this.exec('git rev-parse --short HEAD')
+        return this.cacheCommand('commitTag', 'git rev-parse --short HEAD', 'no-hash')
             .then(commitHash => this.makeTag(`commit-${commitHash}`))
-            .catch(err => {
-                // Swallow errors because, for some reason, the commands runs twice and fails the second time
-            })
     }
 
     get branchTag() {
-        return this.exec('git symbolic-ref --short HEAD')
+        return this.cacheCommand('branchTag', 'git symbolic-ref --short HEAD', 'no-branch')
             .then(branch => this.makeTag(`branch-${branch}`))
-            .catch(err => {
-                // Swallow errors because, for some reason, the commands runs twice and fails the second time
-            })
     }
 
     get dockerTags() {
