@@ -23,8 +23,8 @@ class DefaultUtils {
                     return returnValue
                 })
                 .catch(err => {
-                    console.log(err.message)
                     if (retries === 0) {
+                        console.log(err.message)
                         this[`_${property}`] = defaultValue
                         return defaultValue
                     }
