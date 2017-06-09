@@ -72,6 +72,13 @@ class TravisUtils extends DefaultUtils {
                 return tags
             })
     }
+
+    get branchTag() {
+        const isPR = process.env.TRAVIS_PULL_REQUEST
+        return this.makeTag(
+            `branch-${isPR ? process.env.TRAVIS_PULL_REQUEST_BRANCH : process.env.TRAVIS_BRANCH}`
+        )
+    }
 }
 
 let dockerUtils = DefaultUtils
