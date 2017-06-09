@@ -75,8 +75,19 @@ class TravisUtils extends DefaultUtils {
 
     get branchTag() {
         const isPR = process.env.TRAVIS_PULL_REQUEST
+        const prBranch = process.env.TRAVIS_PULL_REQUEST_BRANCH
+        const notPrBranch = process.env.TRAVIS_BRANCH
+        console.log(isPR)
+        console.log(prBranch)
+        console.log(notPrBranch)
+        let branch
+        if (isPR === 'false'){
+            branch = notPrBranch
+        } else {
+            branch = prBranch
+        }
         return this.makeTag(
-            `branch-${isPR ? process.env.TRAVIS_PULL_REQUEST_BRANCH : process.env.TRAVIS_BRANCH}`
+            `branch-${branch}`
         )
     }
 }
