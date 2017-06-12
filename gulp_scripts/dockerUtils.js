@@ -1,5 +1,6 @@
 import promisify from 'es6-promisify'
 import childProcess from 'child_process'
+import projectProperties from '../package.json'
 
 class DefaultUtils {
     constructor(username, repo) {
@@ -46,8 +47,12 @@ class DefaultUtils {
             .then(branch => this.makeTag(`branch-${branch}`))
     }
 
+    get versionTag() {
+        return this.makeTag(projectProperties.version)
+    }
+
     get dockerTags() {
-        return Promise.all([this.branchTag, this.commitTag])
+        return Promise.all([this.branchTag, this.commitTag, this.versionTag])
     }
 
     get login() {
@@ -84,10 +89,14 @@ class TravisUtils extends DefaultUtils {
     get dockerTags() {
         return super.dockerTags
             .then(tags => {
-                tags.push(this.makeTag(`travis-build-${process.env.TRAVIS_BUILD_NUMBER}`))
+                tags.push(this.travisBuildTag)
                 this.specialBranches.forEach(fun => fun(tags))
                 return tags
             })
+    }
+
+    get travisBuildTag(){
+        return this.makeTag(`travis-build-${process.env.TRAVIS_BUILD_NUMBER}`)
     }
 
     get branchTag() {
