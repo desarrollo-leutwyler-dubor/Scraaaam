@@ -1,7 +1,7 @@
 # Ignore everything by default and include only required files
 **
-!/gulp_scripts
-!/src
+!gulp_scripts
+!src
 !.babelrc
 !gulpfile.babel.js
 !package.json

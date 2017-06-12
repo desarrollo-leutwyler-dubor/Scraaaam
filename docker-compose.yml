@@ -3,6 +3,8 @@ mongo:
   ports:
     - "27018:27017"
   command: "--smallfiles --logpath=/dev/null"
+  volumes:
+    - /data/db/mongodb:/data/db
 
 app:
   build: .
