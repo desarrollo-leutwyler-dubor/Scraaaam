@@ -4,9 +4,8 @@ import chai from "chai"
 chai.should()
 
 describe("Main page", () => {
-
   it("looking for projects and creating one", async() => {
-    browser.get("http://localhost:3001")
+    browser.get(process.env.APP_URL ||"http://localhost:3001")
 
     const title = await browser.getTitle()
     title.should.be.equal("Scraaaam")
