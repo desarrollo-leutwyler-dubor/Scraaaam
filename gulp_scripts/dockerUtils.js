@@ -65,19 +65,38 @@ class DefaultUtils {
 }
 
 class TravisUtils extends DefaultUtils {
+    constructor(username, repo) {
+        super(username, repo)
+        this.specialBranches = [
+            this.makeTransform('master', 'latest'),
+            this.makeTransform('dev', 'develop')
+        ]
+    }
+
+    makeTransform(branchName, tag) {
+        return tags => {
+            if (this.sourceBranch === branchName) {
+                tags.push(this.makeTag(tag))
+            }
+        }
+    }
+
     get dockerTags() {
         return super.dockerTags
             .then(tags => {
                 tags.push(this.makeTag(`travis-build-${process.env.TRAVIS_BUILD_NUMBER}`))
+                this.specialBranches.forEach(fun => fun(tags))
                 return tags
             })
     }
 
     get branchTag() {
+        return Promise.resolve(this.makeTag(`branch-${this.sourceBranch}`))
+    }
+
+    get sourceBranch() {
         const isPR = process.env.TRAVIS_PULL_REQUEST
-        return Promise.resolve(this.makeTag(
-            `branch-${isPR === 'false' ? process.env.TRAVIS_BRANCH : process.env.TRAVIS_PULL_REQUEST_BRANCH}`
-        ))
+        return isPR === 'false' ? process.env.TRAVIS_BRANCH : process.env.TRAVIS_PULL_REQUEST_BRANCH
     }
 }
 
