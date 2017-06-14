@@ -1,7 +1,17 @@
 version: '2'
 services:
+  mongo:
+    logging:
+      driver: 'none'
+
+  app:
+    logging:
+      driver: 'none'
+
   selenium:
     image: selenium/standalone-chrome
+    logging:
+      driver: 'none'
 
   test:
     build:
