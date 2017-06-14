@@ -2,7 +2,9 @@
 **
 !gulp_scripts
 !src
+!test
 !.babelrc
 !gulpfile.babel.js
 !package.json
+!protractor.conf.js
 !webpack.config.js

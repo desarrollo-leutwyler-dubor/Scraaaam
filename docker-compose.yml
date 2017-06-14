@@ -1,16 +1,18 @@
-mongo:
-  image: mongo
-  ports:
-    - "27018:27017"
-  command: "--smallfiles --logpath=/dev/null"
-  volumes:
-    - /data/db/mongodb:/data/db
+version: '2'
+services:
+  mongo:
+    image: mongo
+    ports:
+      - "27018:27017"
+    command: "--smallfiles --logpath=/dev/null"
 
-app:
-  build: .
-  ports:
-    - "3001:3001"
-  links:
-    - mongo
-  environment:
-    MONGO_URL: 'mongodb://mongo/projects'
+  app:
+    build: .
+    depends_on:
+      - mongo
+    ports:
+      - "3001:3001"
+    links:
+      - mongo
+    environment:
+      MONGO_URL: 'mongodb://mongo/projects'
