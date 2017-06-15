@@ -22,7 +22,7 @@ describe("Main page", () => {
 
         describe("Inside project", () => {
             it("enter a project and change current project", async () => {
-                await click(element.all(by.css("projectlist a")).first())
+                await click(element.all(by.css("project a")).first())
                 const project = await element.all(
                     by.css("taskframe div[class='panel-heading'] div div")
                 ).first().getText()
@@ -85,7 +85,7 @@ describe("Main page", () => {
 
 
 const createTask = async (kind, name, description) => {
-    await click(element(by.css("newtaskbutton a")))
+    await click(element.all(by.css("newtaskbutton a")).first())
     await element(by.css("edittaskmodal input[name=title]")).sendKeys(name)
     await element(by.css("edittaskmodal textarea[name=description]")).sendKeys(description)
     await element(by.css("edittaskmodal select")).sendKeys(kind)

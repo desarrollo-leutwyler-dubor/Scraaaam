@@ -20,6 +20,8 @@ services:
     image: selenium/standalone-chrome
     logging:
       driver: 'none'
+    ports:
+      - '4444:4444'
 
   test:
     build:
