@@ -14,25 +14,20 @@ describe("Main page", () => {
 
         const cantidadOriginal = await element.all(by.css("projectlist project")).count()
 
-        createProject("ProtractorProject1", "this is actually being saved")
-        createProject("ProtractorProject2", "this is actually being saved")
+        await createProject("ProtractorProject1", "this is actually being saved")
+        await createProject("ProtractorProject2", "this is actually being saved")
 
         const cantidad = await element.all(by.css("projectList project")).count()
         cantidad.should.be.equal(cantidadOriginal + 2)
 
         describe("Inside project", () => {
             it("enter a project and change current project", async () => {
-                await browser.sleep(sleepTime)
-                await element.all(by.css("projectlist a")).first().click()
-                await browser.sleep(sleepTime)
+                await click(element.all(by.css("projectlist a")).first())
                 const project = await element.all(
                     by.css("taskframe div[class='panel-heading'] div div")
                 ).first().getText()
-                await browser.sleep(sleepTime)
-                await element(by.css("a[class='dropdown-toggle']")).click()
-                await browser.sleep(sleepTime)
-                await element.all(by.css("ul li ul li a")).last().click()
-                await browser.sleep(sleepTime)
+                await click(element(by.css("a[class='dropdown-toggle']")))
+                await click(element.all(by.css("ul li ul li a")).last())
                 const otherProject = await element.all(
                     by.css("taskframe div[class='panel-heading'] div div")
                 ).first().getText()
@@ -40,31 +35,27 @@ describe("Main page", () => {
             })
 
             it("creates a milestones", async () => {
-                await browser.sleep(sleepTime)
                 const cantidadDeTasksOriginal = await element.all(by.css("tasklist task")).count()
-                createTask("Milestone", "Milestones Rules", "Very high level description")
+                await createTask("Milestone", "Milestones Rules", "Very high level description")
                 const cantidadActual = await element.all(by.css("tasklist task")).count()
                 cantidadActual.should.be.equal(cantidadDeTasksOriginal + 1)
             })
 
             it("creates an epic", async () => {
-                await browser.sleep(sleepTime)
                 const cantidadDeTasksOriginal = await element.all(by.css("tasklist task")).count()
-                createTask("Epic", "Epic Rules", "not so high level description")
+                await createTask("Epic", "Epic Rules", "not so high level description")
                 const cantidadActual = await element.all(by.css("tasklist task")).count()
                 cantidadActual.should.be.equal(cantidadDeTasksOriginal + 1)
             })
 
             it("creates a task", async () => {
-                await browser.sleep(sleepTime)
                 const cantidadDeTasksOriginal = await element.all(by.css("tasklist task")).count()
-                createTask("Normal", "Task Rules", "low level description")
+                await createTask("Normal", "Task Rules", "low level description")
                 const cantidadActual = await element.all(by.css("tasklist task")).count()
                 cantidadActual.should.be.equal(cantidadDeTasksOriginal + 1)
             })
 
             it("delete a task", async () => {
-                await browser.sleep(sleepTime)
                 const cantidadDeTasksOriginal = await element.all(by.css("tasklist task")).count()
                 await element.all(by.css("tasklist task a button")).first().click()
                 const cantidadActual = await element.all(by.css("tasklist task")).count()
@@ -72,7 +63,6 @@ describe("Main page", () => {
             })
 
             it("comment a task", async () => {
-                await browser.sleep(sleepTime)
                 await element.all(by.css("tasklist task")).first().click()
                 await element.all(by.css("taskframe div[class='panel-heading'] button")).get(2).click()
                 const cantidadDeCommentsOriginal = await element.all(
@@ -95,21 +85,21 @@ describe("Main page", () => {
 
 
 const createTask = async (kind, name, description) => {
-    click(element(by.css("newtaskbutton a")))
+    await click(element(by.css("newtaskbutton a")))
     await element(by.css("edittaskmodal input[name=title]")).sendKeys(name)
     await element(by.css("edittaskmodal textarea[name=description]")).sendKeys(description)
     await element(by.css("edittaskmodal select")).sendKeys(kind)
-    click(element(by.css("edittaskmodal form button")))
+    return click(element(by.css("edittaskmodal form button")))
 }
 
 const createProject = async (title, description) => {
-    click(element(by.css("projectlist newprojectbutton a")))
+    await click(element(by.css("projectlist newprojectbutton a")))
     await element(by.css("editprojectmodal input[name=title]")).sendKeys(title)
     await element(by.css("editprojectmodal textarea[name=description]")).sendKeys(description)
-    click(element(by.css("editprojectmodal form button")))
+    return click(element(by.css("editprojectmodal form button")))
 }
 
 const click = async element => {
     await element.click()
-    await browser.sleep(sleepTime)
+    return browser.sleep(sleepTime)     // Waiting for animations
 }
