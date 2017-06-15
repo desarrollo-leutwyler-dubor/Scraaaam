@@ -46,3 +46,9 @@ const dockerClient = new GulpDockerClient(dockerUtils.dockerOpts)
 gulp.task('docker-build', dockerClient.buildImage(__dirname, dockerUtils.commitTag));
 
 gulp.task('docker-push', ['docker-build'], dockerClient.pushWith(dockerUtils))
+
+gulp.task('e2e-test', () => run(
+    'docker-compose -f test/e2e/docker-compose.e2e-test.yml stop && ' +
+    'docker-compose -f test/e2e/docker-compose.e2e-test.yml rm -fv mongo && ' +
+    'docker-compose -f test/e2e/docker-compose.e2e-test.yml build && ' +
+    'docker-compose -f test/e2e/docker-compose.e2e-test.yml run test').exec())

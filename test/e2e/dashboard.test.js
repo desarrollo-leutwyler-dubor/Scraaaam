@@ -3,8 +3,6 @@ import "babel-polyfill"
 import chai from "chai"
 chai.should()
 
-const sleepTime = 500
-
 describe("Main page", () => {
     it("looking for projects and creating one", async () => {
         browser.get(process.env.APP_URL || "http://localhost:3001")
@@ -27,7 +25,7 @@ describe("Main page", () => {
                     by.css("taskframe div[class='panel-heading'] div div")
                 ).first().getText()
                 await click(element(by.css("a[class='dropdown-toggle']")))
-                await click(element.all(by.css("ul li ul li a")).last())
+                await click(element.all(by.css("ul li ul li a")).get(1))
                 const otherProject = await element.all(
                     by.css("taskframe div[class='panel-heading'] div div")
                 ).first().getText()
@@ -100,6 +98,7 @@ const createProject = async (title, description) => {
 }
 
 const click = async element => {
+    const sleepTime = 500
     await element.click()
     return browser.sleep(sleepTime)     // Waiting for animations
 }
