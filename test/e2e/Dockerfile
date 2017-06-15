@@ -1,17 +1,13 @@
-FROM node:6 AS builder
+FROM node:6
 
-WORKDIR scraaaam
+WORKDIR scraaaam/test/e2e
 
 RUN npm set progress=false && npm config set depth 0
-
-RUN npm install --global --silent gulp-cli > /dev/null
 
 COPY package.json .
 
 RUN npm install --silent > /dev/null
 
-COPY protractor.conf.js .
-COPY .babelrc .
-COPY ./test/e2e ./test/e2e
+COPY . .
 
-ENTRYPOINT ["npm", "run", "e2e-test"]
+ENTRYPOINT ["npm", "start"]

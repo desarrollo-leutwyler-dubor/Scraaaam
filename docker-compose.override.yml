@@ -1,3 +1,0 @@
-mongo:
-  volumes:
-    - /data/db/mongodb:/data/db

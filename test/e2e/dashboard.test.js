@@ -3,7 +3,7 @@ import "babel-polyfill"
 import chai from "chai"
 chai.should()
 
-const sleepTime = 200
+const sleepTime = 500
 
 describe("Main page", () => {
     it("looking for projects and creating one", async () => {
@@ -14,26 +14,25 @@ describe("Main page", () => {
 
         const cantidadOriginal = await element.all(by.css("projectlist project")).count()
 
-        await element(by.css("projectlist newprojectbutton a")).click()
-
-        await browser.sleep(sleepTime)
-
-        await element(by.css("editprojectmodal input[name=title]")).sendKeys("ProtractorProject")
-        await element(by.css("editprojectmodal textarea[name=description]")).sendKeys("this is actually being saved")
-        await element(by.css("editprojectmodal form button")).click()
+        createProject("ProtractorProject1", "this is actually being saved")
+        createProject("ProtractorProject2", "this is actually being saved")
 
         const cantidad = await element.all(by.css("projectList project")).count()
-        cantidad.should.be.equal(cantidadOriginal + 1)
+        cantidad.should.be.equal(cantidadOriginal + 2)
 
         describe("Inside project", () => {
             it("enter a project and change current project", async () => {
                 await browser.sleep(sleepTime)
-                await element.all(by.css("projectlist a")).get(2).click()
+                await element.all(by.css("projectlist a")).first().click()
+                await browser.sleep(sleepTime)
                 const project = await element.all(
                     by.css("taskframe div[class='panel-heading'] div div")
                 ).first().getText()
+                await browser.sleep(sleepTime)
                 await element(by.css("a[class='dropdown-toggle']")).click()
-                await element.all(by.css("ul li ul li a")).first().click()
+                await browser.sleep(sleepTime)
+                await element.all(by.css("ul li ul li a")).last().click()
+                await browser.sleep(sleepTime)
                 const otherProject = await element.all(
                     by.css("taskframe div[class='panel-heading'] div div")
                 ).first().getText()
@@ -43,7 +42,7 @@ describe("Main page", () => {
             it("creates a milestones", async () => {
                 await browser.sleep(sleepTime)
                 const cantidadDeTasksOriginal = await element.all(by.css("tasklist task")).count()
-                await createTask("Milestone", "Milestones Rules", "Very high level description")
+                createTask("Milestone", "Milestones Rules", "Very high level description")
                 const cantidadActual = await element.all(by.css("tasklist task")).count()
                 cantidadActual.should.be.equal(cantidadDeTasksOriginal + 1)
             })
@@ -51,7 +50,7 @@ describe("Main page", () => {
             it("creates an epic", async () => {
                 await browser.sleep(sleepTime)
                 const cantidadDeTasksOriginal = await element.all(by.css("tasklist task")).count()
-                await createTask("Epic", "Epic Rules", "not so high level description")
+                createTask("Epic", "Epic Rules", "not so high level description")
                 const cantidadActual = await element.all(by.css("tasklist task")).count()
                 cantidadActual.should.be.equal(cantidadDeTasksOriginal + 1)
             })
@@ -59,7 +58,7 @@ describe("Main page", () => {
             it("creates a task", async () => {
                 await browser.sleep(sleepTime)
                 const cantidadDeTasksOriginal = await element.all(by.css("tasklist task")).count()
-                await createTask("Normal", "Task Rules", "low level description")
+                createTask("Normal", "Task Rules", "low level description")
                 const cantidadActual = await element.all(by.css("tasklist task")).count()
                 cantidadActual.should.be.equal(cantidadDeTasksOriginal + 1)
             })
@@ -96,10 +95,21 @@ describe("Main page", () => {
 
 
 const createTask = async (kind, name, description) => {
-    await element(by.css("newtaskbutton a")).click()
-    await browser.sleep(sleepTime)
+    click(element(by.css("newtaskbutton a")))
     await element(by.css("edittaskmodal input[name=title]")).sendKeys(name)
     await element(by.css("edittaskmodal textarea[name=description]")).sendKeys(description)
     await element(by.css("edittaskmodal select")).sendKeys(kind)
-    return element(by.css("edittaskmodal form button")).click()
+    click(element(by.css("edittaskmodal form button")))
+}
+
+const createProject = async (title, description) => {
+    click(element(by.css("projectlist newprojectbutton a")))
+    await element(by.css("editprojectmodal input[name=title]")).sendKeys(title)
+    await element(by.css("editprojectmodal textarea[name=description]")).sendKeys(description)
+    click(element(by.css("editprojectmodal form button")))
+}
+
+const click = async element => {
+    await element.click()
+    await browser.sleep(sleepTime)
 }

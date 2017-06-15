@@ -7,5 +7,5 @@ exports.config = {
     onPrepare: function () {
         require("babel-register");
     },
-    specs: ['test/e2e/dashboard.test.js']
+    specs: ['dashboard.test.js']
 };

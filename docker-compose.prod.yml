@@ -1,0 +1,17 @@
+version: '2'
+services:
+  mongo:
+    extends:
+      file: docker-compose.common.yml
+      service: mongo
+    volumes:
+      - /data/db/mongodb:/data/db
+
+  app:
+    extends:
+      file: docker-compose.common.yml
+      service: app
+    depends_on:
+      - mongo
+    links:
+      - mongo
