@@ -14,18 +14,18 @@
     "coverage-test": "NODE_ENV=test nyc npm test",
     "coverage": "nyc npm test && nyc report --reporter=lcov > coverage.lcov && codecov -t $CODECOV_TOKEN",
     "frontend-test": "node --max_old_space_size=4096 node_modules/karma/bin/karma start karma.conf.js",
-    "e2e-test": "protractor protractor.conf.js",
+    "e2e-test": "protractor test/e2e/protractor.conf.js",
     "gulp": "gulp"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Ramshell/Scraaaam.git"
+    "url": "git+https://github.com/desarrollo-leutwyler-dubor/Scraaaam.git"
   },
   "keywords": [],
   "author": "UNQ - Ramshell - Emanuel Dubor",
   "license": "APL",
   "bugs": {
-    "url": "https://github.com/Ramshell/Scraaaam/issues"
+    "url": "https://github.com/desarrollo-leutwyler-dubor/Scraaaam/issues"
   },
   "devDependencies": {
     "babel-cli": "6.24.0",

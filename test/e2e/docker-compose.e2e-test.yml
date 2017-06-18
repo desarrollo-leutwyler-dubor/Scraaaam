@@ -1,0 +1,39 @@
+version: '2'
+services:
+  mongo:
+    extends:
+      file: ../../docker-compose.common.yml
+      service: mongo
+    logging:
+      driver: 'none'
+
+  app:
+    extends:
+      file: ../../docker-compose.common.yml
+      service: app
+    links:
+      - mongo
+    logging:
+      driver: 'none'
+
+  selenium:
+    image: selenium/standalone-chrome
+    logging:
+      driver: 'none'
+    ports:
+      - '4444:4444'
+
+  test:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    depends_on:
+      - selenium
+      - app
+    links:
+      - selenium
+      - app
+    environment:
+      APP_URL: 'http://app:3001'
+      WEBDRIVER: 'http://selenium:4444/wd/hub'
+

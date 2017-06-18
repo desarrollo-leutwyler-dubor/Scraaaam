@@ -1,8 +1,6 @@
 # Ignore everything by default and include only required files
 **
-!gulp_scripts
-!src
 !.babelrc
-!gulpfile.babel.js
+!dashboard.test.js
 !package.json
-!webpack.config.js
+!protractor.conf.js

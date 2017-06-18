@@ -13,8 +13,9 @@ before_install:
 install:
   - npm install --silent
 script:
-  - npm run gulp all-non-e2e
   - npm run gulp lint
+  - npm run gulp all-non-e2e
+  - npm run gulp e2e-test
 after_success:
   - npm run gulp coverage
   - npm run gulp docker-push
