@@ -1,0 +1,51 @@
+version: '2'
+services:
+  mongo:
+    extends:
+      file: ../../docker-compose.common.yml
+      service: mongo
+    logging:
+      driver: 'none'
+
+  app:
+    extends:
+      file: ../../docker-compose.common.yml
+      service: app
+    links:
+      - mongo
+    logging:
+      driver: 'none'
+
+  app-dev:
+    extends:
+      file: ../../docker-compose.dev.yml
+      service: app
+    links:
+      - mongo
+    logging:
+      driver: 'none'
+
+  nightmare:
+    image: quay.io/ivanvanderbyl/docker-nightmare:latest
+    logging:
+      driver: 'none'
+
+  electron:
+    image: aheuermann/electron
+    logging:
+      driver: 'none'
+
+  test:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    depends_on:
+      - app-dev
+      - app
+      - nightmare
+      - electron
+    links:
+      - app-dev
+      - app
+      - nightmare
+      - electron

@@ -19,6 +19,8 @@ RUN npm install --silent > /dev/null
 
 COPY . .
 
+RUN git checkout dev
+
 RUN gulp build
 
 FROM node:6
