@@ -10,10 +10,5 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-      args:
-        app_port: 3001
-    ports:
-      - "3001:3001"
     environment:
       MONGO_URL: 'mongodb://mongo/projects'
-      APP_PORT: 3001

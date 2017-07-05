@@ -29,8 +29,4 @@ COPY package.json .
 COPY --from=builder /scraaaam/prod_node_modules ./node_modules
 COPY --from=builder /scraaaam/dist ./dist
 
-ARG app_port=3001
-
-EXPOSE $app_port
-
 ENTRYPOINT ["npm", "start"]

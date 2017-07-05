@@ -52,3 +52,13 @@ gulp.task('e2e-test', () => run(
     'docker-compose -f test/e2e/docker-compose.e2e-test.yml rm -fv mongo && ' +
     'docker-compose -f test/e2e/docker-compose.e2e-test.yml build && ' +
     'docker-compose -f test/e2e/docker-compose.e2e-test.yml run test').exec())
+
+gulp.task('niffy-test', () => {
+    try{ run(
+        'docker-compose -f test/perceptual/docker-compose.niffy-test.yml stop && ' +
+        'docker-compose -f test/perceptual/docker-compose.niffy-test.yml rm -fv mongo && ' +
+        'docker-compose -f test/perceptual/docker-compose.niffy-test.yml build && ' +
+        'docker-compose -f test/perceptual/docker-compose.niffy-test.yml run test').exec()
+      }
+    catch(err){}
+  })

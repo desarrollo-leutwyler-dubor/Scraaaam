@@ -9,8 +9,8 @@ describe('App', function () {
 
   before(function () {
     niffy = new Niffy(
-      'http://app:3001',
-      'http://app-dev:3002',
+      'http://app-dev:3001',
+      'http://app:3002',
       { show: false }
     )
   })

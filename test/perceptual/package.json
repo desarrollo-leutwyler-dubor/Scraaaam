@@ -4,7 +4,7 @@
   "description": "",
   "main": "dashboard.test.js",
   "scripts": {
-    "start": "xvfb-run --server-args='-screen 0 1024x768x24' mocha --harmony --require co-mocha --slow 10s --timeout 200s niffy_test.js"
+    "start": "xvfb-run --server-args='-screen 0 1024x768x24' mocha --harmony --require co-mocha --slow 10s --timeout 200s niffy_test.js > out; cat out"
   },
   "repository": {
     "type": "git",
