@@ -58,7 +58,9 @@ gulp.task('niffy-test', () => {
         'docker-compose -f test/perceptual/docker-compose.niffy-test.yml stop && ' +
         'docker-compose -f test/perceptual/docker-compose.niffy-test.yml rm -fv mongo && ' +
         'docker-compose -f test/perceptual/docker-compose.niffy-test.yml build && ' +
-        'docker-compose -f test/perceptual/docker-compose.niffy-test.yml run test').exec()
+        'docker-compose -f test/perceptual/docker-compose.niffy-test.yml run test && ' +
+        `curl --user '${process.env.GITHUB_USER}:${process.env.GITHUB_PASS}' --request POST --data '{"body":"testing"}'`
+      ).exec()
       }
     catch(err){}
   })
