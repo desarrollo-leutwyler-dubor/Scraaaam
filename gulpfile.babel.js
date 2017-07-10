@@ -53,14 +53,10 @@ gulp.task('e2e-test', () => run(
     'docker-compose -f test/e2e/docker-compose.e2e-test.yml build && ' +
     'docker-compose -f test/e2e/docker-compose.e2e-test.yml run test').exec())
 
-gulp.task('niffy-test', () => {
-    try{ run(
+gulp.task('niffy-test', () => run(
         'docker-compose -f test/perceptual/docker-compose.niffy-test.yml stop && ' +
         'docker-compose -f test/perceptual/docker-compose.niffy-test.yml rm -fv mongo && ' +
         'docker-compose -f test/perceptual/docker-compose.niffy-test.yml build && ' +
         'docker-compose -f test/perceptual/docker-compose.niffy-test.yml run test && ' +
-        `curl --user '${process.env.GITHUB_USER}:${process.env.GITHUB_PASS}' --request POST --data '{"body":"testing"}'`
-      ).exec()
-      }
-    catch(err){}
-  })
+        `curl --user "${process.env.GITHUB_USER}:${process.env.GITHUB_PASS}" --request POST --data '{"body":"testing"}' https://api.github.com/repos/${process.env.TRAVIS_REPO_SLUG}/issues/${process.env.TRAVIS_PULL_REQUEST}/comments`
+      ).exec())
