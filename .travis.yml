@@ -19,4 +19,4 @@ script:
 after_success:
   - npm run gulp coverage
   - npm run gulp docker-push
-
+  - if [ "$TRAVIS_PULL_REQUEST" != "false" ]; then npm run gulp niffy-test; fi

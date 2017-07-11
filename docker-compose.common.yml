@@ -7,8 +7,8 @@ services:
     command: "--smallfiles --logpath=/dev/null"
 
   app:
-    build: .
-    ports:
-      - "3001:3001"
+    build:
+      context: .
+      dockerfile: Dockerfile
     environment:
       MONGO_URL: 'mongodb://mongo/projects'

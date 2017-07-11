@@ -29,6 +29,4 @@ COPY package.json .
 COPY --from=builder /scraaaam/prod_node_modules ./node_modules
 COPY --from=builder /scraaaam/dist ./dist
 
-EXPOSE 3001
-
 ENTRYPOINT ["npm", "start"]

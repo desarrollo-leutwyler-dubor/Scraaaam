@@ -1,0 +1,62 @@
+version: '2'
+services:
+  mongo:
+    extends:
+      file: ../../docker-compose.common.yml
+      service: mongo
+    logging:
+      driver: 'none'
+
+  app:
+    extends:
+      file: ../../docker-compose.common.yml
+      service: app
+    links:
+      - mongo
+    logging:
+      driver: 'none'
+    ports:
+      - "3002:3002"
+    environment:
+      MONGO_URL: 'mongodb://mongo/projects'
+      APP_PORT: 3002
+
+  app-dev:
+    image: desarrolloleutwylerdubor/scraaaam:branch-dev
+    links:
+      - mongo
+    logging:
+      driver: 'none'
+    ports:
+      - "3001:3001"
+    environment:
+      MONGO_URL: 'mongodb://mongo/projects'
+      APP_PORT: 3001
+
+  nightmare:
+    image: quay.io/ivanvanderbyl/docker-nightmare:latest
+    logging:
+      driver: 'none'
+
+  electron:
+    image: aheuermann/electron
+    logging:
+      driver: 'none'
+
+  test:
+    image: scraaaam-niffy
+    build:
+      context: .
+      dockerfile: Dockerfile
+    depends_on:
+      - app-dev
+      - app
+      - nightmare
+      - electron
+    links:
+      - app-dev
+      - app
+      - nightmare
+      - electron
+    volumes:
+      - /out
