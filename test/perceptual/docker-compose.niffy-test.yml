@@ -58,3 +58,5 @@ services:
       - app
       - nightmare
       - electron
+    volumes:
+      - /out
